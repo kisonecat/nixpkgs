@@ -14,7 +14,7 @@ with stdenv.lib;
 stdenv.mkDerivation rec {
   version = "0.28";
   name = "notmuch-${version}";
-
+       
   passthru = {
     pythonSourceRoot = "${name}/bindings/python";
     inherit version;
@@ -52,7 +52,7 @@ stdenv.mkDerivation rec {
       --replace '-install_name $(libdir)' "-install_name $out/lib"
   '';
 
-  configureFlags = [ "--zshcompletiondir=$(out)/share/zsh/site-functions" ];
+  configureFlags = [ "--zshcompletiondir=$(out)/share/zsh/site-functions --with-ruby" ];
 
   # Notmuch doesn't use autoconf and consequently doesn't tag --bindir and
   # friends
@@ -76,6 +76,12 @@ stdenv.mkDerivation rec {
   ];
 
   installTargets = "install install-man";
+  
+  # the ruby library is built, but not installed
+  postInstall = ''
+    mkdir -p $out/lib/ruby
+    install -Dm755 bindings/ruby/notmuch.so $out/lib/ruby
+  '';
 
   dontGzipMan = true; # already compressed
 
