@@ -26,7 +26,7 @@ let
   isPy35 = python.pythonVersion == "3.5";
   isPy36 = python.pythonVersion == "3.6";
   isPy37 = python.pythonVersion == "3.7";
-  isPyPy = python.executable == "pypy";
+  isPyPy = strings.substring 0 4 python.executable == "pypy";
   isPy3k = strings.substring 0 1 python.pythonVersion == "3";
 
   callPackage = pkgs.newScope self;
@@ -288,6 +288,8 @@ in {
 
   cdecimal = callPackage ../development/python-modules/cdecimal { };
 
+  chalice = callPackage ../development/python-modules/chalice { };
+
   clustershell = callPackage ../development/python-modules/clustershell { };
 
   cozy = callPackage ../development/python-modules/cozy { };
@@ -409,6 +411,8 @@ in {
   intelhex = callPackage ../development/python-modules/intelhex { };
 
   jira = callPackage ../development/python-modules/jira { };
+
+  jwcrypto = callPackage ../development/python-modules/jwcrypto { };
 
   lammps-cython = callPackage ../development/python-modules/lammps-cython {
     mpi = pkgs.openmpi;
@@ -1423,6 +1427,8 @@ in {
 
   pytest-datafiles = callPackage ../development/python-modules/pytest-datafiles { };
 
+  pytest-dependency = callPackage ../development/python-modules/pytest-dependency { };
+
   pytest-django = callPackage ../development/python-modules/pytest-django { };
 
   pytest-faulthandler = callPackage ../development/python-modules/pytest-faulthandler { };
@@ -1611,11 +1617,10 @@ in {
 
   easy-thumbnails = callPackage ../development/python-modules/easy-thumbnails { };
 
-  eccodes = disabledIf (!isPy27)
-    (toPythonModule (pkgs.eccodes.override {
-      enablePython = true;
-      pythonPackages = self;
-    }));
+  eccodes = toPythonModule (pkgs.eccodes.override {
+    enablePython = true;
+    pythonPackages = self;
+  });
 
   EditorConfig = callPackage ../development/python-modules/editorconfig { };
 
@@ -1668,6 +1673,10 @@ in {
   faulthandler = if ! isPy3k
     then callPackage ../development/python-modules/faulthandler {}
     else throw "faulthandler is built into ${python.executable}";
+
+  flexmock = callPackage ../development/python-modules/flexmock { };
+
+  fb-re2 = callPackage ../development/python-modules/fb-re2 { };
 
   flit = callPackage ../development/python-modules/flit { };
 
@@ -1869,6 +1878,8 @@ in {
   logilab_astng = callPackage ../development/python-modules/logilab_astng { };
 
   lpod = callPackage ../development/python-modules/lpod { };
+
+  ludios_wpull = callPackage ../development/python-modules/ludios_wpull { };
 
   luftdaten = callPackage ../development/python-modules/luftdaten { };
 
@@ -2605,6 +2616,8 @@ in {
 
   gspread = callPackage ../development/python-modules/gspread { };
 
+  gym = callPackage ../development/python-modules/gym { };
+
   gyp = callPackage ../development/python-modules/gyp { };
 
   guessit = callPackage ../development/python-modules/guessit { };
@@ -2670,6 +2683,8 @@ in {
   inifile = callPackage ../development/python-modules/inifile { };
 
   interruptingcow = callPackage ../development/python-modules/interruptingcow {};
+
+  iocapture = callPackage ../development/python-modules/iocapture { };
 
   iptools = callPackage ../development/python-modules/iptools { };
 
@@ -3074,6 +3089,8 @@ in {
 
   namebench = callPackage ../development/python-modules/namebench { };
 
+  namedlist = callPackage ../development/python-modules/namedlist { };
+
   nameparser = callPackage ../development/python-modules/nameparser { };
 
   nbconvert = callPackage ../development/python-modules/nbconvert { };
@@ -3119,6 +3136,8 @@ in {
   nose-exclude = callPackage ../development/python-modules/nose-exclude { };
 
   nose-focus = callPackage ../development/python-modules/nose-focus { };
+
+  nose-randomly = callPackage ../development/python-modules/nose-randomly { };
 
   nose2 = callPackage ../development/python-modules/nose2 { };
 
@@ -4318,8 +4337,6 @@ in {
     py = python.override{x11Support=true;};
   in callPackage ../development/python-modules/tkinter { py = py; };
 
-  tlslite = throw "deprecated 2018-12-10; use pythonPackages.tlslite-ng instead";
-
   tlslite-ng = callPackage ../development/python-modules/tlslite-ng { };
 
   qrcode = callPackage ../development/python-modules/qrcode { };
@@ -4408,6 +4425,8 @@ in {
 
   zope_contenttype = callPackage ../development/python-modules/zope_contenttype { };
 
+  zope-deferredimport = callPackage ../development/python-modules/zope-deferredimport { };
+
   zope_dottedname = callPackage ../development/python-modules/zope_dottedname { };
 
   zope_event = callPackage ../development/python-modules/zope_event { };
@@ -4415,6 +4434,8 @@ in {
   zope_exceptions = callPackage ../development/python-modules/zope_exceptions { };
 
   zope_filerepresentation = callPackage ../development/python-modules/zope_filerepresentation { };
+
+  zope-hookable = callPackage ../development/python-modules/zope-hookable { };
 
   zope_i18n = callPackage ../development/python-modules/zope_i18n { };
 
@@ -4455,7 +4476,9 @@ in {
 
   python-libarchive = callPackage ../development/python-modules/python-libarchive { };
 
-  libarchive-c = callPackage ../development/python-modules/libarchive-c { };
+  libarchive-c = callPackage ../development/python-modules/libarchive-c {
+    inherit (pkgs) libarchive;
+  };
 
   libasyncns = callPackage ../development/python-modules/libasyncns {
     inherit (pkgs) libasyncns pkgconfig;
@@ -5081,6 +5104,10 @@ in {
   pymssql = callPackage ../development/python-modules/pymssql { };
 
   nanoleaf = callPackage ../development/python-modules/nanoleaf { };
+
+  importlib-metadata = callPackage ../development/python-modules/importlib-metadata {};
+
+  importlib-resources = callPackage ../development/python-modules/importlib-resources {};
 
 });
 

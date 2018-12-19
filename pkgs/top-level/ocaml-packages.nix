@@ -54,6 +54,8 @@ let
 
     atd = callPackage ../development/ocaml-modules/atd { };
 
+    atdgen = callPackage ../development/ocaml-modules/atdgen { };
+
     base64 = callPackage ../development/ocaml-modules/base64 { };
 
     bap = callPackage ../development/ocaml-modules/bap {
@@ -227,6 +229,8 @@ let
     earley_ocaml = callPackage ../development/ocaml-modules/earley_ocaml { };
 
     easy-format = callPackage ../development/ocaml-modules/easy-format { };
+
+    elina = callPackage ../development/ocaml-modules/elina { };
 
     eliom = callPackage ../development/ocaml-modules/eliom {
       js_of_ocaml-lwt = js_of_ocaml-lwt.override {
