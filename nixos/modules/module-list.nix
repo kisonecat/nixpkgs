@@ -154,6 +154,7 @@
   ./security/chromium-suid-sandbox.nix
   ./security/dhparams.nix
   ./security/duosec.nix
+  ./security/google_oslogin.nix
   ./security/hidepid.nix
   ./security/lock-kernel-modules.nix
   ./security/misc.nix
@@ -303,6 +304,7 @@
   ./services/hardware/usbmuxd.nix
   ./services/hardware/thermald.nix
   ./services/hardware/undervolt.nix
+  ./services/hardware/vdr.nix
   ./services/logging/SystemdJournal2Gelf.nix
   ./services/logging/awstats.nix
   ./services/logging/fluentd.nix
@@ -693,7 +695,7 @@
   ./services/system/dbus.nix
   ./services/system/earlyoom.nix
   ./services/system/localtime.nix
-  ./services/system/kerberos.nix
+  ./services/system/kerberos/default.nix
   ./services/system/nscd.nix
   ./services/system/saslauthd.nix
   ./services/system/uptimed.nix

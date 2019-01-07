@@ -3,24 +3,20 @@
 let
   common = { stname, target, postInstall ? "" }:
     buildGoPackage rec {
-      version = "0.14.52";
+      version = "1.0.0";
       name = "${stname}-${version}";
 
       src = fetchFromGitHub {
         owner  = "syncthing";
         repo   = "syncthing";
         rev    = "v${version}";
-        sha256 = "1qzzbqfyjqlgzysyf6dr0xsm3gn35irmllxjjd94v169swvkk5kd";
+        sha256 = "1qkjnij9jw3d4pjkdr6npz5ps604qg6g36jnsng0k1r2qnrydnwh";
       };
 
       goPackagePath = "github.com/syncthing/syncthing";
 
       patches = [
         ./add-stcli-target.patch
-        (fetchpatch {
-          url = "https://github.com/syncthing/syncthing/commit/e7072feeb7669948c3e43f55d21aec15481c33ba.patch";
-          sha256 = "1pcybww2vdx45zhd1sd53v7fp40vfgkwqgy8flv7hxw2paq8hxd4";
-        })
       ];
       BUILD_USER="nix";
       BUILD_HOST="nix";

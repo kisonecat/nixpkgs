@@ -20,28 +20,33 @@
 , glibcLocales
 , nose
 , send2trash
+, CoreAudio
 # This little flag adds a huge number of dependencies, but we assume that
 # everyone wants Anki to draw plots with statistics by default.
 , plotsSupport ? true
 }:
 
 buildPythonApplication rec {
-    version = "2.1.6-beta2";
+    version = "2.1.8";
     name = "anki-${version}";
 
     src = fetchurl {
       urls = [
-        "https://apps.ankiweb.net/downloads/beta/${name}-source.tgz"
+        "https://apps.ankiweb.net/downloads/current/${name}-source.tgz"
         # "https://apps.ankiweb.net/downloads/current/${name}-source.tgz"
         # "http://ankisrs.net/download/mirror/${name}.tgz"
         # "http://ankisrs.net/download/mirror/archive/${name}.tgz"
       ];
-      sha256 = "0h71s1j1269x0b8481z8xf019caqglcjs32xlpzk72087ps169fa";
+      sha256 = "08wb9hwpmbq7636h7sinim33qygdwwlh3frqqh2gfgm49f46di2p";
     };
 
-    propagatedBuildInputs = [ pyqt5 sqlalchemy
-      beautifulsoup4 send2trash pyaudio requests decorator markdown ]
-                            ++ lib.optional plotsSupport matplotlib;
+    propagatedBuildInputs = [
+      pyqt5 sqlalchemy beautifulsoup4 send2trash pyaudio requests decorator
+      markdown
+    ]
+      ++ lib.optional plotsSupport matplotlib
+      ++ lib.optional stdenv.isDarwin [ CoreAudio ]
+      ;
 
     checkInputs = [ pytest glibcLocales nose ];
 
@@ -54,16 +59,6 @@ buildPythonApplication rec {
     patches = [
       # Disable updated version check.
       ./no-version-check.patch
-
-      # This is needed to fix python 3.7 compatibilty, where the
-      # behaviour of `re.escape()` was changed in a way that it no
-      # longer escapes `%`. This patch detects this difference at
-      # runtime and makes anki work with any python version.
-      # Upstream PR: https://github.com/dae/anki/pull/266
-      (fetchpatch {
-        url = "https://github.com/dae/anki/commit/3d69aa9ce454a151ba75deafd7de117af2c7307d.patch";
-        sha256 = "0kf9gajhy0wcajp24xfia71z6gn1mc4vl37svvq4sqbhj3gigd0h";
-      })
     ];
 
     buildPhase = ''

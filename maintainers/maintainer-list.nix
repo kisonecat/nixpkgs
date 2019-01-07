@@ -391,6 +391,11 @@
     github = "asppsa";
     name = "Alastair Pharo";
   };
+  astro = {
+    email = "astro@spaceboyz.net";
+    github = "astro";
+    name = "Astro";
+  };
   astsmtl = {
     email = "astsmtl@yandex.ru";
     github = "astsmtl";
@@ -1329,6 +1334,11 @@
     github = "ellis";
     name = "Ellis Whitehead";
   };
+  elohmeier = {
+    email = "elo-nixos@nerdworks.de";
+    github = "elohmeier";
+    name = "Enno Lohmeier";
+  };
   elseym = {
     email = "elseym@me.com";
     github = "elseym";
@@ -1739,6 +1749,11 @@
     email = "github@hamhut1066.com";
     github = "hamhut1066";
     name = "Hamish Hutchings";
+  };
+  hansjoergschurr = {
+    email = "commits@schurr.at";
+    github = "hansjoergschurr";
+    name = "Hans-Jörg Schurr";
   };
   haslersn = {
     email = "haslersn@fius.informatik.uni-stuttgart.de";
@@ -3906,6 +3921,10 @@
     github = "fkz";
     name = "Fabian Schmitthenner";
   };
+  schmittlauch = {
+    email = "t.schmittlauch+nixos@orlives.de";
+    github = "schmittlauch";
+  };
   schneefux = {
     email = "schneefux+nixos_pkg@schneefux.xyz";
     github = "schneefux";
@@ -4676,6 +4695,11 @@
     email = "vklquevs@gmail.com";
     github = "vklquevs";
     name = "vklquevs";
+  };
+  vlaci = {
+    email = "laszlo.vasko@outlook.com";
+    github = "vlaci";
+    name = "László Vaskó";
   };
   vlstill = {
     email = "xstill@fi.muni.cz";
