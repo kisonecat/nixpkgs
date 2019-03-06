@@ -16,8 +16,8 @@
 , zip ? null, unzip ? null, pkgconfig ? null
 , gtk2 ? null, libart_lgpl ? null
 , libX11 ? null, libXt ? null, libSM ? null, libICE ? null, libXtst ? null
-, libXrender ? null, xproto ? null, renderproto ? null, xextproto ? null
-, libXrandr ? null, libXi ? null, inputproto ? null, randrproto ? null
+, libXrender ? null, xorgproto ? null
+, libXrandr ? null, libXi ? null
 , x11Support ? langJava
 , enableMultilib ? false
 , enablePlugin ? stdenv.hostPlatform == stdenv.buildPlatform # Whether to support user-supplied plug-ins
@@ -78,7 +78,7 @@ let version = "6.5.0";
 
     xlibs = [
       libX11 libXt libSM libICE libXtst libXrender libXrandr libXi
-      xproto renderproto xextproto inputproto randrproto
+      xorgproto
     ];
 
     javaAwtGtk = langJava && x11Support;
@@ -180,18 +180,23 @@ stdenv.mkDerivation ({
 
   hardeningDisable = [ "format" "pie" ];
 
-  # This should kill all the stdinc frameworks that gcc and friends like to
-  # insert into default search paths.
-  prePatch = stdenv.lib.optionalString hostPlatform.isDarwin ''
-    substituteInPlace gcc/config/darwin-c.c \
-      --replace 'if (stdinc)' 'if (0)'
+  prePatch =
+    (stdenv.lib.optionalString (langJava || langGo) ''
+      export lib=$out
+    '')
 
-    substituteInPlace libgcc/config/t-slibgcc-darwin \
-      --replace "-install_name @shlib_slibdir@/\$(SHLIB_INSTALL_NAME)" "-install_name $lib/lib/\$(SHLIB_INSTALL_NAME)"
+    # This should kill all the stdinc frameworks that gcc and friends like to
+    # insert into default search paths.
+    + stdenv.lib.optionalString hostPlatform.isDarwin ''
+      substituteInPlace gcc/config/darwin-c.c \
+        --replace 'if (stdinc)' 'if (0)'
 
-    substituteInPlace libgfortran/configure \
-      --replace "-install_name \\\$rpath/\\\$soname" "-install_name $lib/lib/\\\$soname"
-  '';
+      substituteInPlace libgcc/config/t-slibgcc-darwin \
+        --replace "-install_name @shlib_slibdir@/\$(SHLIB_INSTALL_NAME)" "-install_name $lib/lib/\$(SHLIB_INSTALL_NAME)"
+
+      substituteInPlace libgfortran/configure \
+        --replace "-install_name \\\$rpath/\\\$soname" "-install_name $lib/lib/\\\$soname"
+    '';
 
   postPatch =
     if targetPlatform != hostPlatform || stdenv.cc.libc != null then
@@ -326,7 +331,7 @@ stdenv.mkDerivation ({
     optional (!bootstrap) "--disable-bootstrap" ++
 
     # Platform-specific flags
-    optional (targetPlatform == hostPlatform && targetPlatform.isi686) "--with-arch=i686" ++
+    optional (targetPlatform == hostPlatform && targetPlatform.isx86_32) "--with-arch=${stdenv.hostPlatform.parsed.cpu.name}" ++
     optionals hostPlatform.isSunOS [
       "--enable-long-long" "--enable-libssp" "--enable-threads=posix" "--disable-nls" "--enable-__cxa_atexit"
       # On Illumos/Solaris GNU as is preferred
@@ -447,7 +452,7 @@ stdenv.mkDerivation ({
 
 // optionalAttrs (enableMultilib) { dontMoveLib64 = true; }
 
-// optionalAttrs (langJava) {
+// optionalAttrs (langJava && !stdenv.hostPlatform.isDarwin) {
      postFixup = ''
        target="$(echo "$out/libexec/gcc"/*/*/ecj*)"
        patchelf --set-rpath "$(patchelf --print-rpath "$target"):$out/lib" "$target"

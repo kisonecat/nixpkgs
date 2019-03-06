@@ -1,15 +1,18 @@
-{ stdenv, fetchurl, perl }:
+{ stdenv, fetchFromRepoOrCz, autoreconfHook, perl, asciidoc, xmlto, docbook_xml_dtd_45, docbook_xsl }:
 
 stdenv.mkDerivation rec {
   name = "nasm-${version}";
-  version = "2.14.01";
+  version = "2.14.02";
 
-  src = fetchurl {
-    url = "https://www.nasm.us/pub/nasm/releasebuilds/${version}/${name}.tar.bz2";
-    sha256 = "1v9fazd3in0rphnw5ck58wqnl8dis4dyqpsqgjsm4h9jjj0vylvz";
+  src = fetchFromRepoOrCz {
+    repo = "nasm";
+    rev = name;
+    sha256 = "15z6ybnzlsrqs2964h6czqhpmr7vc3ln4y4h0z9vrznk4mqcwbsa";
   };
 
-  nativeBuildInputs = [ perl ];
+  nativeBuildInputs = [ autoreconfHook perl asciidoc xmlto docbook_xml_dtd_45 docbook_xsl ];
+
+  postBuild = "make manpages";
 
   doCheck = true;
 

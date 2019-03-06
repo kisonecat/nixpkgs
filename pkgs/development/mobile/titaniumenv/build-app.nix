@@ -1,7 +1,7 @@
 {stdenv, composeAndroidPackages, composeXcodeWrapper, titaniumsdk, titanium, alloy, jdk, python, nodejs, which, file}:
 { name, src, preBuild ? "", target, tiVersion ? null
 , release ? false, androidKeyStore ? null, androidKeyAlias ? null, androidKeyStorePassword ? null
-, iosMobileProvisioningProfile ? null, iosCertificateName ? null, iosCertificate ? null, iosCertificatePassword ? null, iosVersion ? "11.3", iosBuildStore ? false
+, iosMobileProvisioningProfile ? null, iosCertificateName ? null, iosCertificate ? null, iosCertificatePassword ? null, iosVersion ? "12.1", iosBuildStore ? false
 , enableWirelessDistribution ? false, installURL ? null
 , xcodeBaseDir ? "/Applications/Xcode.app"
 , androidsdkArgs ? {}
@@ -15,7 +15,7 @@ assert enableWirelessDistribution -> installURL != null;
 
 let
   realAndroidsdkArgs = {
-    platformVersions = [ "26" ];
+    platformVersions = [ "28" ];
   } // androidsdkArgs;
 
   androidsdk = (composeAndroidPackages realAndroidsdkArgs).androidsdk;
@@ -45,6 +45,14 @@ stdenv.mkDerivation ({
 
   buildPhase = ''
     ${preBuild}
+
+    ${stdenv.lib.optionalString stdenv.isDarwin ''
+      # Hack that provides a writable alloy package on macOS. Without it the build fails because of a file permission error.
+      alloy=$(dirname $(type -p alloy))/..
+      cp -rv $alloy/* alloy
+      chmod -R u+w alloy
+      export PATH=$(pwd)/alloy/bin:$PATH
+    ''}
 
     export HOME=${if target == "iphone" then "/Users/$(whoami)" else "$TMPDIR"}
 
@@ -165,7 +173,7 @@ stdenv.mkDerivation ({
         echo "file binary-dist \"$(echo $out/*.ipa)\"" > $out/nix-support/hydra-build-products
 
         ${stdenv.lib.optionalString enableWirelessDistribution ''
-          appname="$(basename "$out/*.ipa" .ipa)"
+          appname="$(basename $out/*.ipa .ipa)"
           bundleId=$(grep '<id>[a-zA-Z0-9.]*</id>' tiapp.xml | sed -e 's|<id>||' -e 's|</id>||' -e 's/ //g')
           version=$(grep '<version>[a-zA-Z0-9.]*</version>' tiapp.xml | sed -e 's|<version>||' -e 's|</version>||' -e 's/ //g')
 

@@ -1,5 +1,5 @@
 { stdenv, fetchurl, pkgconfig, intltool, perlPackages
-, goffice, gnome3, makeWrapper, gtk3, bison, pythonPackages
+, goffice, gnome3, wrapGAppsHook, gtk3, bison, pythonPackages
 , itstool
 }:
 
@@ -16,23 +16,15 @@ in stdenv.mkDerivation rec {
 
   configureFlags = [ "--disable-component" ];
 
-  nativeBuildInputs = [ pkgconfig intltool bison itstool makeWrapper ];
+  nativeBuildInputs = [ pkgconfig intltool bison itstool wrapGAppsHook ];
 
   # ToDo: optional libgda, introspection?
   buildInputs = [
-    goffice gtk3 gnome3.defaultIconTheme
+    goffice gtk3 gnome3.adwaita-icon-theme
     python pygobject3
   ] ++ (with perlPackages; [ perl XMLParser ]);
 
   enableParallelBuilding = true;
-
-  preFixup = ''
-    for f in "$out"/bin/gnumeric-*; do
-      wrapProgram $f \
-        --prefix XDG_DATA_DIRS : "$XDG_ICON_DIRS:$GSETTINGS_SCHEMAS_PATH" \
-        ${stdenv.lib.optionalString (!stdenv.isDarwin) "--prefix GIO_EXTRA_MODULES : '${stdenv.lib.getLib gnome3.dconf}/lib/gio/modules'"}
-    done
-  '';
 
   passthru = {
     updateScript = gnome3.updateScript {

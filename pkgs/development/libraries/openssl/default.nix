@@ -120,8 +120,8 @@ let
 in {
 
   openssl_1_0_2 = common {
-    version = "1.0.2q";
-    sha256 = "115nisqy7kazbg6br2wrcra9nphyph1l4dgp563b9cf2rv5wyi2p";
+    version = "1.0.2r";
+    sha256 = "1mnh27zf6r1bhm5d9fxqq9slv2gz0d9z2ij9i679b0wapa5x0ldf";
     patches = [
       ./1.0.2/nix-ssl-cert-file.patch
 
@@ -134,7 +134,13 @@ in {
   openssl_1_1 = common {
     version = "1.1.1a";
     sha256 = "0hcz7znzznbibpy3iyyhvlqrq44y88plxwdj32wjzgbwic7i687w";
-    patches = [ ./1.1/nix-ssl-cert-file.patch ];
+    patches = [
+      ./1.1/nix-ssl-cert-file.patch
+
+      (if stdenv.hostPlatform.isDarwin
+       then ./1.1/use-etc-ssl-certs-darwin.patch
+       else ./1.1/use-etc-ssl-certs.patch)
+    ];
     withDocs = true;
   };
 

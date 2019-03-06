@@ -44,6 +44,7 @@
   ./hardware/digitalbitbox.nix
   ./hardware/sensor/iio.nix
   ./hardware/ksm.nix
+  ./hardware/ledger.nix
   ./hardware/mcelog.nix
   ./hardware/network/b43.nix
   ./hardware/nitrokey.nix
@@ -82,6 +83,7 @@
   ./misc/version.nix
   ./programs/adb.nix
   ./programs/atop.nix
+  ./programs/autojump.nix
   ./programs/bash/bash.nix
   ./programs/bcc.nix
   ./programs/blcr.nix
@@ -101,6 +103,7 @@
   ./programs/gnupg.nix
   ./programs/gphoto2.nix
   ./programs/iftop.nix
+  ./programs/iotop.nix
   ./programs/java.nix
   ./programs/kbdlight.nix
   ./programs/less.nix
@@ -186,6 +189,7 @@
   ./services/backup/duplicati.nix
   ./services/backup/crashplan.nix
   ./services/backup/crashplan-small-business.nix
+  ./services/backup/duplicity.nix
   ./services/backup/mysql-backup.nix
   ./services/backup/postgresql-backup.nix
   ./services/backup/restic.nix
@@ -194,9 +198,17 @@
   ./services/backup/tarsnap.nix
   ./services/backup/znapzend.nix
   ./services/cluster/hadoop/default.nix
+  ./services/cluster/kubernetes/addons/dns.nix
+  ./services/cluster/kubernetes/addons/dashboard.nix
+  ./services/cluster/kubernetes/addon-manager.nix
+  ./services/cluster/kubernetes/apiserver.nix
+  ./services/cluster/kubernetes/controller-manager.nix
   ./services/cluster/kubernetes/default.nix
-  ./services/cluster/kubernetes/dns.nix
-  ./services/cluster/kubernetes/dashboard.nix
+  ./services/cluster/kubernetes/flannel.nix
+  ./services/cluster/kubernetes/kubelet.nix
+  ./services/cluster/kubernetes/pki.nix
+  ./services/cluster/kubernetes/proxy.nix
+  ./services/cluster/kubernetes/scheduler.nix
   ./services/computing/boinc/client.nix
   ./services/computing/torque/server.nix
   ./services/computing/torque/mom.nix
@@ -241,6 +253,8 @@
   ./services/desktops/bamf.nix
   ./services/desktops/dleyna-renderer.nix
   ./services/desktops/dleyna-server.nix
+  ./services/desktops/pantheon/contractor.nix
+  ./services/desktops/pantheon/files.nix
   ./services/desktops/flatpak.nix
   ./services/desktops/geoclue2.nix
   ./services/desktops/gsignond.nix
@@ -248,12 +262,14 @@
   ./services/desktops/gnome3/at-spi2-core.nix
   ./services/desktops/gnome3/chrome-gnome-shell.nix
   ./services/desktops/gnome3/evolution-data-server.nix
+  ./services/desktops/gnome3/file-roller.nix
   ./services/desktops/gnome3/gnome-disks.nix
   ./services/desktops/gnome3/gnome-documents.nix
   ./services/desktops/gnome3/gnome-keyring.nix
   ./services/desktops/gnome3/gnome-online-accounts.nix
   ./services/desktops/gnome3/gnome-remote-desktop.nix
   ./services/desktops/gnome3/gnome-online-miners.nix
+  ./services/desktops/gnome3/gnome-settings-daemon.nix
   ./services/desktops/gnome3/gnome-terminal-server.nix
   ./services/desktops/gnome3/gnome-user-share.nix
   ./services/desktops/gnome3/gpaste.nix
@@ -265,6 +281,7 @@
   ./services/desktops/gnome3/tracker-miners.nix
   ./services/desktops/profile-sync-daemon.nix
   ./services/desktops/telepathy.nix
+  ./services/desktops/tumbler.nix
   ./services/desktops/zeitgeist.nix
   ./services/development/bloop.nix
   ./services/development/hoogle.nix
@@ -278,6 +295,7 @@
   ./services/hardware/acpid.nix
   ./services/hardware/actkbd.nix
   ./services/hardware/bluetooth.nix
+  ./services/hardware/bolt.nix
   ./services/hardware/brltty.nix
   ./services/hardware/freefall.nix
   ./services/hardware/fwupd.nix
@@ -346,6 +364,7 @@
   ./services/misc/apache-kafka.nix
   ./services/misc/autofs.nix
   ./services/misc/autorandr.nix
+  ./services/misc/beanstalkd.nix
   ./services/misc/bees.nix
   ./services/misc/bepasty.nix
   ./services/misc/canto-daemon.nix
@@ -378,6 +397,7 @@
   ./services/misc/gogs.nix
   ./services/misc/gollum.nix
   ./services/misc/gpsd.nix
+  ./services/misc/headphones.nix
   ./services/misc/home-assistant.nix
   ./services/misc/ihaskell.nix
   ./services/misc/irkerd.nix
@@ -432,6 +452,7 @@
   ./services/misc/uhub.nix
   ./services/misc/weechat.nix
   ./services/misc/xmr-stak.nix
+  ./services/misc/zoneminder.nix
   ./services/misc/zookeeper.nix
   ./services/monitoring/alerta.nix
   ./services/monitoring/apcupsd.nix
@@ -509,6 +530,7 @@
   ./services/networking/cntlm.nix
   ./services/networking/connman.nix
   ./services/networking/consul.nix
+  ./services/networking/coredns.nix
   ./services/networking/coturn.nix
   ./services/networking/dante.nix
   ./services/networking/ddclient.nix
@@ -679,6 +701,7 @@
   ./services/security/hologram-server.nix
   ./services/security/hologram-agent.nix
   ./services/security/munge.nix
+  ./services/security/nginx-sso.nix
   ./services/security/oauth2_proxy.nix
   ./services/security/oauth2_proxy_nginx.nix
   ./services/security/physlock.nix
@@ -712,6 +735,8 @@
   ./services/web-apps/atlassian/jira.nix
   ./services/web-apps/codimd.nix
   ./services/web-apps/frab.nix
+  ./services/web-apps/icingaweb2/icingaweb2.nix
+  ./services/web-apps/icingaweb2/module-monitoring.nix
   ./services/web-apps/mattermost.nix
   ./services/web-apps/nextcloud.nix
   ./services/web-apps/nexus.nix

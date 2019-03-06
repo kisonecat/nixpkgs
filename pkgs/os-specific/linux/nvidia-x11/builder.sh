@@ -33,11 +33,17 @@ installPhase() {
     # since version 391, 32bit libraries are bundled in the 32/ sub-directory
     if [ "$i686bundled" = "1" ]; then
         mkdir -p "$lib32/lib"
-        cp -prd 32/*.so.* 32/tls "$lib32/lib/"
+        cp -prd 32/*.so.* "$lib32/lib/"
+        if [ -d 32/tls ]; then
+            cp -prd 32/tls "$lib32/lib/"
+        fi
     fi
 
     mkdir -p "$out/lib"
-    cp -prd *.so.* tls "$out/lib/"
+    cp -prd *.so.* "$out/lib/"
+    if [ -d tls ]; then
+        cp -prd tls "$out/lib/"
+    fi
 
     for i in $lib32 $out; do
         rm -f $i/lib/lib{glx,nvidia-wfb}.so.* # handled separately
@@ -123,6 +129,8 @@ installPhase() {
         for i in nvidia-cuda-mps-control nvidia-cuda-mps-server nvidia-smi nvidia-debugdump; do
             if [ -e "$i" ]; then
                 install -Dm755 $i $bin/bin/$i
+                # unmodified binary backup for mounting in containers
+                install -Dm755 $i $bin/origBin/$i
                 patchelf --interpreter "$(cat $NIX_CC/nix-support/dynamic-linker)" \
                     --set-rpath $out/lib:$libPath $bin/bin/$i
             fi

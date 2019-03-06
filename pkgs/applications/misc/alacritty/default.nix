@@ -17,6 +17,8 @@
   libXrandr,
   libGL,
   xclip,
+  wayland,
+  libxkbcommon,
   # Darwin Frameworks
   cf-private,
   AppKit,
@@ -40,19 +42,22 @@ let
     libXrandr
     libGL
     libXi
+  ] ++ lib.optionals stdenv.isLinux [
+    wayland
+    libxkbcommon
   ];
 in buildRustPackage rec {
   name = "alacritty-${version}";
-  version = "0.2.4";
+  version = "0.2.9";
 
   src = fetchFromGitHub {
     owner = "jwilm";
     repo = "alacritty";
     rev = "v${version}";
-    sha256 = "1mf0x8dc196qf08lqpm0n4a5954cx9qfb09dq8ab7mp3xnyrnqzx";
+    sha256 = "01wzkpbz6jjmpmnkqswilnn069ir3cx3jvd3j7zsvqdxqpwncz39";
   };
 
-  cargoSha256 = "0p3bygvmpmy09h7972nhmma51lxp8q91cdlaw3s6p35i79hq3bmp";
+  cargoSha256 = "0h9wczgpjh52lhrqg0r2dkrh5svmyvrvh4yj7p0nz45skgrnl8w9";
 
   nativeBuildInputs = [
     cmake
@@ -70,9 +75,6 @@ in buildRustPackage rec {
     ];
 
   outputs = [ "out" "terminfo" ];
-
-  # https://github.com/NixOS/nixpkgs/issues/49693
-  doCheck = !stdenv.isDarwin;
 
   postPatch = ''
     substituteInPlace copypasta/src/x11.rs \

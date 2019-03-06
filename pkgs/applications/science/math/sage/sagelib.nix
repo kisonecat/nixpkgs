@@ -20,7 +20,7 @@
 , jinja2
 , lcalc
 , lrcalc
-, libgap
+, gap
 , linbox
 , m4ri
 , m4rie
@@ -30,6 +30,7 @@
 , numpy
 , pari
 , pkgconfig
+, pkg-config
 , planarity
 , ppl
 , pynac
@@ -63,11 +64,14 @@ buildPythonPackage rec {
     iml
     perl
     jupyter_core
+    pkg-config
+    pip # needed to query installed packages
   ];
 
   buildInputs = [
     gd
     readline
+    iml
   ];
 
   propagatedBuildInputs = [
@@ -88,7 +92,7 @@ buildPythonPackage rec {
     glpk
     gsl
     lcalc
-    libgap
+    gap
     libmpc
     linbox
     lrcalc

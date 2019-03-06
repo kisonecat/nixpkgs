@@ -30,21 +30,26 @@
 , which
 , bash
 , glibcLocales
+, callPackage
 }:
 
 assert !isPy3k -> configparser != null;
 
+let
+
+ # This is a temporary convenience package for changes waiting to be merged into the primary rdflib repo.
+ neurdflib = callPackage ./neurdflib.nix { };
+
+in
+
 buildPythonPackage rec {
   pname = "nipype";
-  version = "1.1.5";
+  version = "1.1.8";
 
   src = fetchPypi {
     inherit pname version;
-    sha256 = "d49bbe531cdbf0a049f1581e4d3c63231ff5978445cb380aa6e7f8f1d256a29c";
+    sha256 = "d5eec6de7d8e7020106c42b37d17f99de92824440cc79dfa6080f7c2e6d9fecc";
   };
-
-  # see https://github.com/nipy/nipype/issues/2240
-  patches = [ ./prov-version.patch ];
 
   postPatch = ''
     substituteInPlace nipype/interfaces/base/tests/test_core.py \
@@ -57,6 +62,7 @@ buildPythonPackage rec {
     funcsigs
     future
     networkx
+    neurdflib
     nibabel
     numpy
     packaging
@@ -72,11 +78,23 @@ buildPythonPackage rec {
     futures
   ];
 
-  checkInputs = [ pytest mock pytestcov pytest_xdist pytest-forked codecov which glibcLocales ];
+  checkInputs = [
+    codecov
+    glibcLocales
+    mock
+    pytest
+    pytest-forked
+    pytest_xdist
+    pytestcov
+    which
+  ];
 
   checkPhase = ''
-    LC_ALL="en_US.UTF-8" py.test -v --doctest-modules nipype
+    LC_ALL="en_US.UTF-8" pytest -v --doctest-modules nipype
   '';
+
+  # See: https://github.com/nipy/nipype/issues/2839
+  doCheck = false;
 
   meta = with stdenv.lib; {
     homepage = http://nipy.org/nipype/;

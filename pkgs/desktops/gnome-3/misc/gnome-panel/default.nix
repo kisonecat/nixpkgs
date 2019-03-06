@@ -8,9 +8,10 @@
 , gettext
 , glib
 , gnome-desktop
+, gnome-flashback
 , gnome-menus
 , gnome3
-, gtk
+, gtk3
 , itstool
 , libgweather
 , libsoup
@@ -43,6 +44,23 @@ in stdenv.mkDerivation rec {
     })
   ];
 
+  # make .desktop Exec absolute
+  postPatch = ''
+    patch -p0 <<END_PATCH
+    +++ gnome-panel/gnome-panel.desktop.in
+    @@ -7 +7 @@
+    -Exec=gnome-panel
+    +Exec=$out/bin/gnome-panel
+    END_PATCH
+  '';
+
+  preFixup = ''
+    gappsWrapperArgs+=(
+      --prefix XDG_DATA_DIRS : "${gnome-menus}/share:${gnome-flashback}/share"
+      --prefix XDG_CONFIG_DIRS : "${gnome-menus}/etc/xdg:${gnome-flashback}/etc/xdg"
+    )
+  '';
+
   nativeBuildInputs = [
     autoreconfHook
     gettext
@@ -59,7 +77,7 @@ in stdenv.mkDerivation rec {
     glib
     gnome-desktop
     gnome-menus
-    gtk
+    gtk3
     libgweather
     libsoup
     libwnck3

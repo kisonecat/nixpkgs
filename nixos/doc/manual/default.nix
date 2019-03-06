@@ -265,6 +265,7 @@ in rec {
       xsltproc \
         ${manualXsltprocOptions} \
         --stringparam target.database.document "${olinkDB}/olinkdb.xml" \
+        --stringparam id.warnings "1" \
         --nonet --output $dst/ \
         ${docbook_xsl_ns}/xml/xsl/docbook/xhtml/chunktoc.xsl \
         ${manual-combined}/manual-combined.xml
@@ -326,6 +327,7 @@ in rec {
       # Generate manpages.
       mkdir -p $out/share/man
       xsltproc --nonet \
+        --maxdepth 6000 \
         --param man.output.in.separate.dir 1 \
         --param man.output.base.dir "'$out/share/man/'" \
         --param man.endnotes.are.numbered 0 \

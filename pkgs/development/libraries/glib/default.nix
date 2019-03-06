@@ -8,6 +8,7 @@
 , doCheck ? stdenv.config.doCheckByDefault or false
 , coreutils, dbus, libxml2, tzdata
 , desktop-file-utils, shared-mime-info
+, darwin
 }:
 
 with stdenv.lib;
@@ -44,6 +45,7 @@ let
     ln -sr -t "''${!outputInclude}/include/" "''${!outputInclude}"/lib/*/include/* 2>/dev/null || true
   '';
 
+  binPrograms = optional (!stdenv.isDarwin) "gapplication" ++ [ "gdbus" "gio" "gsettings" ];
   version = "2.58.2";
 in
 
@@ -70,6 +72,20 @@ stdenv.mkDerivation rec {
         url = https://gitlab.gnome.org/GNOME/glib/commit/85c4031696add9797e2334ced20678edcd96c869.patch;
         sha256 = "1hmyvhx89wip2a26gk1rvd87k0pjfia51s0ysybjyzf5f1pzw877";
       })
+      # https://gitlab.gnome.org/GNOME/glib/issues/1645
+      (fetchpatch {
+        url = https://gitlab.gnome.org/GNOME/glib/commit/e695ca9f310c393d8f39694f77471dbcb06daa9e.diff;
+        sha256 = "1jkb2bdnni0xdyn86xrx9z0fdwxrm7y08lagz8x5x01wglkwa26w";
+      })
+      # https://gitlab.gnome.org/GNOME/glib/issues/1643
+      (fetchpatch {
+        url = https://gitlab.gnome.org/GNOME/glib/commit/c792e5adaa8ae3a45e6ff3ff71168ad8d040a0d4.patch;
+        sha256 = "022x70qfn5wlv5gz3nlg0bwiwjxcd7l11j3qvbms2y8d1ffh5rfd";
+      })
+      (fetchpatch {
+        url = https://gitlab.gnome.org/GNOME/glib/commit/30ccbc386026cecac6ef3a77d8fa4f3c24ac68d7.patch;
+        sha256 = "04y3pxgzlx92cppwibx4rlsyvwxb37aq52x2lr6ajfgykv2nzpr3";
+      })
     ];
 
   outputs = [ "bin" "out" "dev" "devdoc" ];
@@ -83,7 +99,12 @@ stdenv.mkDerivation rec {
   ] ++ optionals stdenv.isLinux [
     libselinux
     utillinuxMinimal # for libmount
-  ];
+  ] ++ optionals stdenv.isDarwin (with darwin.apple_sdk.frameworks; [
+    AppKit Carbon Cocoa CoreFoundation CoreServices Foundation
+    # Needed for CFURLCreateFromFSRef, etc. which have deen deprecated
+    # since 10.9 and are not part of swift-corelibs CoreFoundation.
+    darwin.cf-private
+  ]);
 
   nativeBuildInputs = [
     meson ninja pkgconfig perl python3 gettext gtk-doc docbook_xsl docbook_xml_dtd_45 glibcLocales
@@ -121,15 +142,17 @@ stdenv.mkDerivation rec {
 
   postInstall = ''
     mkdir -p $bin/bin
-    for app in gapplication gdbus gio gsettings; do
+    for app in ${concatStringsSep " " binPrograms}; do
       mv "$dev/bin/$app" "$bin/bin"
     done
 
+  '' + optionalString (!stdenv.isDarwin) ''
     # Add gio-launch-desktop to $out so we can refer to it from $dev
     mkdir $out/bin
     mv "$dev/bin/gio-launch-desktop" "$out/bin/"
     ln -s "$out/bin/gio-launch-desktop" "$bin/bin/"
 
+  '' + ''
     moveToOutput "share/glib-2.0" "$dev"
     substituteInPlace "$dev/bin/gdbus-codegen" --replace "$out" "$dev"
     sed -i "$dev/bin/glib-gettextize" -e "s|^gettext_dir=.*|gettext_dir=$dev/share/glib-2.0/gettext|"

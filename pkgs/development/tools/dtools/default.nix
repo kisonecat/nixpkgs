@@ -2,14 +2,14 @@
 
 stdenv.mkDerivation rec {
   name = "dtools-${version}";
-  version = "2.083.1";
+  version = "2.084.1";
 
   srcs = [
     (fetchFromGitHub {
       owner = "dlang";
       repo = "dmd";
       rev = "v${version}";
-      sha256 = "0b52yq7slgbrawb22kib9bk2x9xjiy6axwz1317fck5axl093d90";
+      sha256 = "10ll5072rkv3ln7i5l88h2f9mzda567kw2jwh6466vm6ylzl4jms";
       name = "dmd";
     })
     (fetchFromGitHub {
@@ -26,6 +26,8 @@ stdenv.mkDerivation rec {
   postUnpack = ''
       mv dmd dtools
       cd dtools
+
+      substituteInPlace posix.mak --replace "\$(DMD) \$(DFLAGS) -unittest -main -run rdmd.d" ""
   '';
 
   nativeBuildInputs = [ dmd ];

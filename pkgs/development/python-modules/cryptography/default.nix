@@ -4,7 +4,6 @@
 , openssl
 , cryptography_vectors
 , darwin
-, idna
 , asn1crypto
 , packaging
 , six
@@ -23,11 +22,11 @@
 buildPythonPackage rec {
   # also bump cryptography_vectors
   pname = "cryptography";
-  version = "2.3.1";
+  version = "2.5";
 
   src = fetchPypi {
     inherit pname version;
-    sha256 = "8d10113ca826a4c29d5b85b2c4e045ffa8bad74fb525ee0eceb1d38d4c70dfd6";
+    sha256 = "00c4d7gvsymlaw0r13zrm32dcnarmpayjyrh65yymlmr6mrbcij9";
   };
 
   outputs = [ "out" "dev" ];
@@ -35,7 +34,6 @@ buildPythonPackage rec {
   buildInputs = [ openssl cryptography_vectors ]
              ++ stdenv.lib.optional stdenv.isDarwin darwin.apple_sdk.frameworks.Security;
   propagatedBuildInputs = [
-    idna
     asn1crypto
     packaging
     six
@@ -66,4 +64,18 @@ buildPythonPackage rec {
   # IOKit's dependencies are inconsistent between OSX versions, so this is the best we
   # can do until nix 1.11's release
   __impureHostDeps = [ "/usr/lib" ];
+
+  meta = with stdenv.lib; {
+    description = "A package which provides cryptographic recipes and primitives";
+    longDescription = ''
+      Cryptography includes both high level recipes and low level interfaces to
+      common cryptographic algorithms such as symmetric ciphers, message
+      digests, and key derivation functions.
+      Our goal is for it to be your "cryptographic standard library". It
+      supports Python 2.7, Python 3.4+, and PyPy 5.3+.
+    '';
+    homepage = https://github.com/pyca/cryptography;
+    license = with licenses; [ asl20 bsd3 psfl ];
+    maintainers = with maintainers; [ primeos ];
+  };
 }

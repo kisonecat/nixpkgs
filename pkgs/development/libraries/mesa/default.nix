@@ -67,7 +67,7 @@ let
 in
 
 let
-  version = "18.3.1";
+  version = "18.3.4";
   branch  = head (splitString "." version);
 in
 
@@ -81,7 +81,7 @@ let self = stdenv.mkDerivation {
       "ftp://ftp.freedesktop.org/pub/mesa/older-versions/${branch}.x/${version}/mesa-${version}.tar.xz"
       "https://mesa.freedesktop.org/archive/mesa-${version}.tar.xz"
     ];
-    sha256 = "0qyw9dj2p9n91qzc4ylck2an7ibssjvzi2bjcpv2ajk851yq47sv";
+    sha256 = "01xv03ah4l5lcfx015n3fg1620dh4nbbv6gmhh6zhdsx6sj4sc9j";
   };
 
   prePatch = "patchShebangs .";
@@ -145,8 +145,7 @@ let self = stdenv.mkDerivation {
     ++ optionals stdenv.isDarwin [ OpenGL Xplugin ];
 
   buildInputs = with xorg; [
-    expat llvmPackages.llvm libglvnd
-    glproto dri2proto dri3proto presentproto
+    expat llvmPackages.llvm libglvnd xorgproto
     libX11 libXext libxcb libXt libXfixes libxshmfence libXrandr
     libffi libvdpau libelf libXvMC
     libpthreadstubs openssl /*or another sha1 provider*/

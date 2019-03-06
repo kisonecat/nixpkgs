@@ -34,7 +34,6 @@ in with python.pkgs; buildPythonApplication rec {
     atomicwrites
     configobj
     vobject
-    argparse
     ruamel_yaml
     ruamel_base
     unidecode
@@ -51,6 +50,6 @@ in with python.pkgs; buildPythonApplication rec {
     homepage = https://github.com/scheibler/khard;
     description = "Console carddav client";
     license = stdenv.lib.licenses.gpl3;
-    maintainers = with stdenv.lib.maintainers; [ ];
+    maintainers = with stdenv.lib.maintainers; [ matthiasbeyer ];
   };
 }

@@ -1,5 +1,6 @@
-{ lib, stdenv, zlib, lzo, libtasn1, nettle, pkgconfig, lzip
-, guileBindings, guile, perl, gmp, autogen, libidn, p11-kit, libiconv
+{ config, lib, stdenv, zlib, lzo, libtasn1, nettle, pkgconfig, lzip
+, perl, gmp, autogen, libidn, p11-kit, libiconv
+, guileBindings ? config.gnutls.guile or false, guile
 , tpmSupport ? false, trousers, which, nettools, libunistring
 , unbound, dns-root-data, gettext
 
@@ -84,7 +85,7 @@ stdenv.mkDerivation {
 
     homepage = https://www.gnu.org/software/gnutls/;
     license = licenses.lgpl21Plus;
-    maintainers = with maintainers; [ eelco wkennington fpletz ];
+    maintainers = with maintainers; [ eelco fpletz ];
     platforms = platforms.all;
   };
 }

@@ -94,7 +94,7 @@ let
       callPackageWith callPackagesWith extendDerivation hydraJob
       makeScope;
     inherit (meta) addMetaAttrs dontDistribute setName updateName
-      appendToName mapDerivationAttrset lowPrio lowPrioSet hiPrio
+      appendToName mapDerivationAttrset setPrio lowPrio lowPrioSet hiPrio
       hiPrioSet;
     inherit (sources) pathType pathIsDirectory cleanSourceFilter
       cleanSource sourceByRegex sourceFilesBySuffices
@@ -132,6 +132,7 @@ let
       mergeAttrsWithFunc mergeAttrsConcatenateValues
       mergeAttrsNoOverride mergeAttrByFunc mergeAttrsByFuncDefaults
       mergeAttrsByFuncDefaultsClean mergeAttrBy
+      fakeSha256 fakeSha512
       nixType imap;
   });
 in lib

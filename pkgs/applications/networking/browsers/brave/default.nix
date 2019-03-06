@@ -76,11 +76,11 @@ let rpath = lib.makeLibraryPath [
 
 in stdenv.mkDerivation rec {
     pname = "brave";
-    version = "0.58.18";
+    version = "0.60.45";
 
     src = fetchurl {
         url = "https://github.com/brave/brave-browser/releases/download/v${version}/brave-browser_${version}_amd64.deb";
-        sha256 = "0xybcgsxjmd8bxi4x4midzw71s23j8icpspqf5sadskhldvshzr3";
+        sha256 = "0c3jfiswbma53lkngndqrcagvhld7q7hqhk9wpm4r6z9y1kskjwy";
     };
 
     dontConfigure = true;
@@ -89,7 +89,7 @@ in stdenv.mkDerivation rec {
 
     nativeBuildInputs = [ dpkg wrapGAppsHook ];
 
-    buildInputs = [ glib gnome3.gsettings_desktop_schemas gnome3.defaultIconTheme ];
+    buildInputs = [ glib gnome3.gsettings_desktop_schemas gnome3.adwaita-icon-theme ];
 
     unpackPhase = "dpkg-deb --fsys-tarfile $src | tar -x --no-same-permissions --no-same-owner";
 

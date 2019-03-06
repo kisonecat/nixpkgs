@@ -11,15 +11,14 @@ in stdenv.mkDerivation rec {
   name = "openafs-${version}-${kernel.modDirVersion}";
   inherit version src;
 
+  patches = [ ./linux-4.20.patch ];
+
   nativeBuildInputs = [ autoconf automake flex libtool_2 perl which yacc ]
     ++ kernel.moduleBuildDependencies;
 
   buildInputs = [ kerberos ];
 
   hardeningDisable = [ "pic" ];
-
-  # The RANDSTRUCT gcc plugin rewrites structs using designated initializers
-  NIX_CFLAGS_COMPILE = [ "-Wno-error=designated-init" ];
 
   configureFlags = [
     "--with-linux-kernel-build=${kernelBuildDir}"
