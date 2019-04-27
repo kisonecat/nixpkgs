@@ -1,14 +1,14 @@
 { stdenv, fetchFromGitHub, ocamlPackages, cf-private, CoreServices }:
 
 stdenv.mkDerivation rec {
-  version = "0.92.0";
-  name = "flow-${version}";
+  pname = "flow";
+  version = "0.97.0";
 
   src = fetchFromGitHub {
     owner  = "facebook";
     repo   = "flow";
     rev    = "refs/tags/v${version}";
-    sha256 = "1v83hkkbls5x2062ry3gwrnn9al8rhsmargv2mvanxlpf0a63wx3";
+    sha256 = "1y6mdm7ph9k3vv8n8hzxr3rqa6bfkh4yn9bcxb7qq67v08dlvx6r";
   };
 
   installPhase = ''
@@ -24,6 +24,6 @@ stdenv.mkDerivation rec {
     homepage = https://flow.org/;
     license = licenses.mit;
     platforms = ocamlPackages.ocaml.meta.platforms;
-    maintainers = with maintainers; [ puffnfresh globin ];
+    maintainers = with maintainers; [ marsam puffnfresh globin ];
   };
 }

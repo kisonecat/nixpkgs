@@ -12,7 +12,6 @@
 , fetchFromGitHub, libmpack, which, fetchpatch, writeText
 , pkgs
 , fetchgit
-, overrides ? (self: super: {})
 , lib
 }:
 
@@ -60,7 +59,7 @@ let
 
   buildLuarocksPackage = with pkgs.lib; makeOverridable( callPackage ../development/interpreters/lua-5/build-lua-package.nix {
     inherit toLuaModule;
-    inherit lua writeText;
+    inherit lua;
   });
 in
 with self; {
@@ -87,7 +86,7 @@ with self; {
   inherit toLuaModule lua-setup-hook;
   inherit buildLuarocksPackage buildLuaApplication;
   inherit requiredLuaModules luaOlder luaAtLeast
-    isLua51 isLua52 isLuaJIT lua callPackage;
+    isLua51 isLua52 isLua53 isLuaJIT lua callPackage;
 
   # wraps programs in $out/bin with valid LUA_PATH/LUA_CPATH
   wrapLua = callPackage ../development/interpreters/lua-5/wrap-lua.nix {
@@ -177,6 +176,9 @@ with self; {
     };
 
     preConfigure = ''export prefix=$out'';
+
+    # https://github.com/wahern/cqueues/issues/216
+    NIX_CFLAGS_COMPILE = [ "-DCQUEUES_VERSION=${version}" ];
 
     nativeBuildInputs = [ gnum4 ];
     buildInputs = [ openssl ];
@@ -867,4 +869,4 @@ with self; {
   });
 
 });
-in (lib.extends overrides packages)
+in packages

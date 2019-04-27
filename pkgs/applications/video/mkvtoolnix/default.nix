@@ -11,14 +11,14 @@ assert withGUI -> qtbase != null && qtmultimedia != null;
 with stdenv.lib;
 
 stdenv.mkDerivation rec {
-  name = "mkvtoolnix-${version}";
-  version = "31.0.0";
+  pname = "mkvtoolnix";
+  version = "33.0.0";
 
   src = fetchFromGitLab {
     owner  = "mbunkus";
     repo   = "mkvtoolnix";
     rev    = "release-${version}";
-    sha256 = "1fml374ivzzmac0ixhngj4bdxszcaw5yxdmacpn6ia7pdyvpf5lh";
+    sha256 = "0bphwjjpcj86phcx795wdy5b0ivwh5mvbvi5288pql88x6x0jjk9";
   };
 
   nativeBuildInputs = [
